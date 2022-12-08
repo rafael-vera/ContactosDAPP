@@ -21,13 +21,8 @@ class App {
     async _setViews() {
         // Muestra la dirección del usuario
         document.querySelector("#vistaCuentaUsuario").innerHTML = vistaVinculado(this._userAccount);
-        // Muestra el formulario para agregar un contacto
-        document.querySelector("#vistaFormulario").innerHTML = formularioAgregarContacto();
-        // Agrega funcionalidad al botón de agregar
-        document.querySelector("#enviar").addEventListener("click", () => {
-            // Se obtiene los datos
-            // Se envian al método para agregar
-        });
+        // Muestra formulario para agregar contactos
+        await this._setViewAddContact();
         // Agrega funcionalidad al botón de actualizar
         document.querySelector("#btnActualizar").addEventListener("click", async () => {
             // Cuando se presione se vuelve a cargar la lista de contactos
@@ -35,6 +30,25 @@ class App {
         });
         // Muestra la lista de contactos
         await this.getContacts();
+    }
+
+    async _setViewAddContact() {
+        // Muestra el formulario para agregar un contacto
+        document.querySelector("#vistaFormulario").innerHTML = formularioAgregarContacto();
+        // Agrega funcionalidad al botón de agregar
+        document.querySelector("#enviar").addEventListener("click", async () => {
+            // Se obtiene los datos
+            const nombre = document.getElementsByName("nombre")[0].value;
+            const apellido = document.getElementsByName("apellido")[0].value;
+            const telefono = document.getElementsByName("telefono")[0].value;
+            const correo = document.getElementsByName("correo")[0].value;
+            let cuenta = document.getElementsByName("cuenta")[0].value;
+            if (cuenta === "") {
+                cuenta = "0x0000000000000000000000000000000000000000";
+            }
+            // Se envian al método para agregar
+            await this.createContact(nombre, apellido, telefono, correo, cuenta);
+        });
     }
 
     async _loadContract() {
@@ -59,17 +73,79 @@ class App {
         let cuerpoTabla = document.querySelector("#cuerpoTabla");
         // Se agrega cada uno a la tabla
         for (let i=0; i<contacts[0].toNumber(); i++) {
-            //cuerpoTabla.innerHTML = cuerpoTabla.innerHTML + filaTabla(i+1, contacts[1][""]);
+            cuerpoTabla.innerHTML = cuerpoTabla.innerHTML + filaTabla(
+                i+1,
+                contacts[1][i]["firstName"],
+                contacts[1][i]["lastName"],
+                contacts[1][i]["telephoneNumber"],
+                contacts[1][i]["email"],
+                contacts[1][i]["account"]
+            );
         }
         // Se agrega funcionalidad a los botones
         for (let i=0; i<contacts[0].toNumber(); i++) {
+            // Se agrega el evento para actualizar
+            document.querySelector(`#btnEdit${i+1}`).addEventListener("click", () => {
+                // Carga el formulario de editar con la información del contacto
+                document.querySelector("#vistaFormulario").innerHTML = formularioEditarContacto(
+                    i+1,
+                    contacts[1][i]["firstName"],
+                    contacts[1][i]["lastName"],
+                    contacts[1][i]["telephoneNumber"],
+                    contacts[1][i]["email"],
+                    contacts[1][i]["account"]
+                );
+                // Agrega funcionalidad al botón de cancelar
+                document.querySelector("#cancelar").addEventListener("click", async () => {
+                    // Muestra formulario para agregar contactos
+                    await this._setViewAddContact();
+                });
+                // Agrega funcionalidad al botón de enviar
+                document.querySelector("#enviar").addEventListener("click", async () => {
+                    // Se obtienen los datos
+                    const id = document.getElementsByName("id")[0].value;
+                    const nombre = document.getElementsByName("nombre")[0].value;
+                    const apellido = document.getElementsByName("apellido")[0].value;
+                    const telefono = document.getElementsByName("telefono")[0].value;
+                    const correo = document.getElementsByName("correo")[0].value;
+                    let cuenta = document.getElementsByName("cuenta")[0].value;
+                    if (cuenta === "") {
+                        cuenta = "0x0000000000000000000000000000000000000000";
+                    }
+                    // Se envian al metodo para editar
+                    await this.updateContact(
+                        id,
+                        nombre,
+                        apellido,
+                        telefono,
+                        correo,
+                        cuenta
+                    );
+                });
+            });
+            // Se agrega el evento para eliminar
+            document.querySelector(`#btnDelete${i+1}`).addEventListener("click", async () => {
+                // Elimina el contacto
+                await this.deleteContact(i+1);
+            });
         }
         // Datatables
+        $(document).ready( function () {
+            $('#tabla').DataTable();
+        } );
     }
 
     async createContact(nombre, apellido, telefono, correo, cuenta) {
         try {
             // Se agrega el contacto
+            const result = await this._contactsContract.addContact(
+                nombre,
+                apellido,
+                telefono,
+                correo,
+                cuenta,
+                {from: this._userAccount}
+            );
             // Se actualiza la lista de contactos
             this.getContacts();
         } catch (error) {
@@ -77,9 +153,18 @@ class App {
         }
     }
 
-    updateContact(id, nombre, apellido, telefono, correo, cuenta) {
+    async updateContact(id, nombre, apellido, telefono, correo, cuenta) {
         try {
             // Se actualiza el contacto
+            const result = await this._contactsContract.updateContact(
+                id,
+                nombre,
+                apellido,
+                telefono,
+                correo,
+                cuenta,
+                {from: this._userAccount}
+            );
             // Se actualiza la lista de contactos
             this.getContacts();
         } catch (error) {
@@ -87,9 +172,13 @@ class App {
         }
     }
 
-    deleteContact(id) {
+    async deleteContact(id) {
         try {
             // Se elimina el contacto
+            const result = await this._contactsContract.deleteContact(
+                id,
+                {from: this._userAccount}
+            );
             // Se actualiza la lista de contactos
             this.getContacts();
         } catch (error) {
