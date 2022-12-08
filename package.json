@@ -1,12 +1,12 @@
 {
   "dependencies": {
+    "@truffle/contract": "^4.6.8",
     "bootstrap": "^5.2.3",
     "lite-server": "^2.2.0"
   },
   "name": "contratocontactosfrontend",
   "version": "1.0.0",
   "main": "app.js",
-  "devDependencies": {},
   "scripts": {
     "dev": "lite-server"
   },

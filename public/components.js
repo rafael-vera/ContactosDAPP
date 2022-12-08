@@ -1,9 +1,18 @@
 export function vistaSinVincular() {
-    return `<h1>Sin vincular</h1>`;
+    return `<h3>Conectar billetera</h3>
+            <button type="button" id="conectar" class="btn btn-warning">Conectar</button>`;
 }
 
 export function vistaVinculado(cuenta) {
-    return `<h1>Vinculado</h1>`;
+    return `<h3>Vinculado</h3>
+            <div class="card">
+                <h5 class="card-header">
+                    <i class="fa fa-user" aria-hidden="true"> Dirección de usuario</i>
+                </h5>
+                <div class="card-body">
+                    <h6>${cuenta}</h6>
+                </div>
+            </div>`;
 }
 
 export function estructuraTabla() {
@@ -15,11 +24,32 @@ export function estructuraTabla() {
                         <th>Telefono</th>
                         <th>Correo</th>
                         <th>Cuenta</th>
+                        <th>Opciones</th>
                     </tr>
                 </thead>
                 <tbody id="cuerpoTabla">
                 </tbody>
             </table>`;
+}
+
+export function filaTabla(id, nombre, apellido, telefono, correo, cuenta) {
+    return `<tr>
+                <td>${nombre}</td>
+                <td>${apellido}</td>
+                <td>${telefono}</td>
+                <td>${correo}</td>
+                <td>${cuenta}</td>
+                <td>
+                    <div class="d-flex justify-content-evenly">
+                        <button type="button" id="btnEdit${id}" class="btn btn-info">
+                            <i class="fa fa-pencil" aria-hidden="true"> Editar</i>
+                        </button>
+                        <button type="button" id="btnDelete${id}" class="btn btn-danger">
+                            <i class="fa fa-trash" aria-hidden="true"> Eliminar</i>
+                        </button>
+                    </div>
+                </td>
+            </tr>`;
 }
 
 export function formularioAgregarContacto() {

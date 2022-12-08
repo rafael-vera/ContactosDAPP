@@ -16,16 +16,14 @@
                 </div>
             </nav>
         </header>
-        <main class="container p-5">
+        <main class="container">
             <div class="row justify-content-between">
                 <div class="col-4">
                     <div class="row my-3 d-flex justify-content-center align-items-center">
-                        <div class="card bg-light">
+                        <div class="card bg-info">
                             <div class="card-body text-center" id="vistaCuentaUsuario">
                                 <!--
                                     Aquí va a ir la vista referente al usuario.
-                                    Si no se ha iniciado MetaMask, mostrará el botón para cargar el MetaMask
-                                    Sino mostrará el número de cuenta
                                 -->
                             </div>
                         </div>
@@ -33,25 +31,32 @@
                     <div class="row my-3 d-flex justify-content-center align-items-center">
                         <div class="card bg-light">
                             <div class="card-body text-center" id="vistaFormulario">
+                                <!--
+                                    Aquí va a ir la vista referente al formulario.
+                                -->
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-6 overflow-auto">
+                <div class="col-7 overflow-auto">
                     <div class="d-flex justify-content-between">
                         <h1>Lista de Contactos</h1>
                         <div class="my-auto">
-                            <button type="button" class="btn btn-success">
-                                <i id="btnActualizar" class="fa fa-refresh" aria-hidden="true"></i>
+                            <button type="button" class="btn btn-success" id="btnActualizar">
+                                <i class="fa fa-refresh" aria-hidden="true"></i>
                             </button>
                         </div>
                     </div>
                     <hr>
                     <div id="estructuraTabla">
+                        <!--
+                            Aquí va a ir la vista referente a la tabla.
+                        -->
                     </div>
                 </div>
             </div>
         </main>
     </body>
+    <script src="/libs/@truffle/contract/browser-dist/truffle-contract.min.js"></script>
     <script type="module" src="app.js"></script>
 </html>

@@ -1,7 +1,8 @@
 {
     "server": {
         "baseDir": [
-            "./public"
+            "./public",
+            "./contract"
         ],
         "routes": {
             "/libs": "./node_modules"
